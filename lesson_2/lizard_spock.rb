@@ -12,7 +12,7 @@ def win?(first, second)
     (first == 'spock' && %w(scissor rock).include?(second))
 end
 
-def display_results(human, computer)
+def display_round_results(human, computer)
   if win?(human, computer)
     prompt "You won this round!"
   elsif win?(computer, human)
@@ -67,7 +67,7 @@ loop do
 
   prompt "You chose: #{human_choice}; Computer chose: #{computer_choice}"
 
-  display_results(human_choice, computer_choice)
+  display_round_results(human_choice, computer_choice)
 
   human_score += 1 if win?(human_choice, computer_choice)
   computer_score += 1 if win?(computer_choice, human_choice)

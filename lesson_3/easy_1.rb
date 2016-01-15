@@ -15,3 +15,9 @@
 6) famous_words = "seven years ago..."
    "Four score and " + famous_words
    famous_words.prepend("Four score and ")
+7) 42
+8) flintstones.flatten!
+9) flintstones.assoc("Barney")
+10) flintstones = ["Fred", "Barney", "Wilma", "Betty", "Pebbles", "BamBam"]
+  hash = Hash.new
+  flintstones.each_with_index { |name, index| hash[name] = index }
