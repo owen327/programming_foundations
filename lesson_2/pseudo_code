@@ -1,0 +1,58 @@
+1)
+Given two numbers.
+  - Set each number to a variable.
+  - Set variable result to the sum of both variables
+  - Return the the variable result.
+
+START
+
+# Write a method that returns the sum of two integers
+
+SET first number = number1 as integer
+SET second number = number2 as integer
+SET result = number1 + number2
+
+PRINT result
+
+END
+
+2)
+Given an array of strings.
+  - Create an empty string.
+  - Set empty string to variable new string.
+Iterate through the array one by one.
+  - For each iteration concatenate with the new string.
+After iterating through the array, return the new string.
+
+
+START
+
+# Write a method that takes an array of strings, and returns a string that is all those strings concatenated together
+
+SET new_string = ""
+FOR each string in the array
+  SET new_string = new_string + string
+
+PRINT new_string
+
+END
+
+3)
+Given an array of integers.
+  - Create a new array.
+For each integer.
+  - If integer position is odd
+  - Add integer to the new array.
+
+START
+
+# Write a method that takes an array of integers, and returns a new array with every other element
+
+SET new_array = []
+SET iterator = 0
+FOR i / 2 even?
+SET new_array += integer
+
+PRINT new_array
+
+END
