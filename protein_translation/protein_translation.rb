@@ -27,14 +27,12 @@ class Translation
     @codons.each do |codon|
       @proteins << of_codon(codon)
     end
+    raise InvalidCodonError if @proteins.any?(&:nil?)
   end
 
   def self.of_rna(strand)
     get_codons_from_strand(strand)
-
     get_proteins_from_codons
-
-    raise InvalidCodonError if @proteins.any?(&:nil?)
 
     @proteins.slice!(@proteins.index('STOP'), @proteins.size) if @proteins.include?('STOP')
     @proteins
