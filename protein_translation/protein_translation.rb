@@ -22,7 +22,7 @@ class Translation
     (strand.size / 3).times do
       @codons << upcase_strand.slice!(0, 3)
     end
-    raise InvalidCodonError if @codons.empty? || @codons.any? { |codon| of_codon(codon).nil? }
+    raise InvalidCodonError if @codons.empty? || @codons.any? { |codon| of_codon(codon).nil? } || strand.length % 3 != 0
     @codons
   end
 
@@ -42,6 +42,11 @@ class Translation
     @proteins.slice!(@proteins.index('STOP'), @proteins.size) if @proteins.include?('STOP')
     @proteins
   end
+
+  def self.display_results(strand)
+    prompt "Codons: #{get_codons_from_strand(strand)}"
+    prompt "Proteins: #{of_rna(strand)}"
+  end
 end
 
 def prompt(message)
@@ -58,8 +63,7 @@ loop do
   prompt "Please enter a strand:"
   strand = gets.chomp
 
-  prompt "Codons: #{Translation.get_codons_from_strand(strand)}" rescue p 'Your strand is invalid!'
-  prompt "Proteins: #{Translation.of_rna(strand)}" rescue 
+  Translation.display_results(strand) rescue p 'Your strand is invalid!'
 
   prompt "Do you want to try another strand?"
   answer = gets.chomp
