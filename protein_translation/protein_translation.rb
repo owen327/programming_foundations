@@ -1,3 +1,4 @@
+require 'pry'
 class InvalidCodonError < StandardError
 end
 #
@@ -16,10 +17,12 @@ class Translation
   end
 
   def self.get_codons_from_strand(strand)
+    upcase_strand = strand.upcase
     @codons = []
     (strand.size / 3).times do
-      @codons << strand.slice!(0, 3)
+      @codons << upcase_strand.slice!(0, 3)
     end
+    @codons
   end
 
   def self.get_proteins_from_codons
@@ -32,6 +35,7 @@ class Translation
 
   def self.of_rna(strand)
     get_codons_from_strand(strand)
+
     get_proteins_from_codons
 
     @proteins.slice!(@proteins.index('STOP'), @proteins.size) if @proteins.include?('STOP')
@@ -39,4 +43,29 @@ class Translation
   end
 end
 
-puts Translation.of_rna('CARROT').inspect rescue p 'Your strand is invalid!'
+def prompt(message)
+  puts "=> #{message}"
+end
+
+system 'clear'
+
+puts '*' * 80
+puts " Welcome to Protein Translation! ".center(80, '*')
+puts '*' * 80
+
+loop do
+  prompt "Please enter a strand:"
+  strand = gets.chomp
+
+  prompt "Codons: #{Translation.get_codons_from_strand(strand)}"
+  prompt "Proteins: #{Translation.of_rna(strand)}" rescue p 'Your strand is invalid!'
+
+  prompt "Do you want to try another strand?"
+  answer = gets.chomp
+  break unless answer.downcase.start_with?('y')
+end
+
+puts '*' * 80
+puts " Thank you for using Protein Translation! ".center(80, '*')
+puts " Good bye! ".center(80, '*')
+puts '*' * 80
