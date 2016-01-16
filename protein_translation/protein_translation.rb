@@ -43,8 +43,8 @@ class Translation
   end
 
   def self.display_results(strand)
-    prompt "Codons: #{get_codons_from_strand(strand)}"
-    prompt "Proteins: #{of_rna(strand)}"
+    prompt "Codons: #{get_codons_from_strand(strand).join(", ")}"
+    prompt "Proteins: #{of_rna(strand).join(", ")}"
   end
 end
 
