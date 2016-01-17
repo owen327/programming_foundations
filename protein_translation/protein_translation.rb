@@ -19,8 +19,7 @@ module Translation
   end
 
   def self.of_rna(strand)
-    proteins = strand.scan(/.../).map { |codon| of_codon(codon) }
-    proteins.slice!(proteins.index('STOP'), proteins.size) if proteins.include?('STOP')
-    proteins
+    strand.scan(/.../).take_while { |codon| of_codon(codon) != 'STOP' }
+                      .map { |codon| of_codon(codon) }
   end
 end
