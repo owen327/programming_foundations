@@ -1,6 +1,6 @@
 class InvalidCodonError < StandardError
 end
-
+#
 module Translation
   CODON_PROTEIN = {
     'AUG' => 'Methionine',    'UUU' => 'Phenylalanine',
@@ -15,14 +15,12 @@ module Translation
   }
 
   def self.of_codon(codon)
-    CODON_PROTEIN.fetch(codon) { raise InvalidCodonError }
+    CODON_PROTEIN.fetch(codon) { fail InvalidCodonError }
   end
 
   def self.of_rna(strand)
-    proteins = strand.scan(/.../).map do |codon|
-      of_codon(codon)
-    end
+    proteins = strand.scan(/.../).map { |codon| of_codon(codon) }
     proteins.slice!(proteins.index('STOP'), proteins.size) if proteins.include?('STOP')
-    p proteins
+    proteins
   end
 end
