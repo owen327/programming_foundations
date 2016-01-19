@@ -40,7 +40,6 @@ end
 def player_places_piece!(brd)
   square = ''
   loop do
-#    prompt "Choose a position to place a piece: #{joinor(brd)}"
     prompt "Choose a position to place a piece: #{joinor(empty_squares(brd), ', ')}"
     square = gets.chomp.to_i
     break if empty_squares(brd).include?(square)
@@ -50,7 +49,15 @@ def player_places_piece!(brd)
 end
 
 def computer_places_piece!(brd)
-  square = empty_squares(brd).sample
+  if winning_opportunity?(brd)
+    square = locate_winning_opportunity(brd)
+  elsif immediate_threat?(brd)
+    square = locate_threat(brd)
+  elsif brd[5] == INITIAL_MARKER
+    square = 5
+  else
+    square = empty_squares(brd).sample
+  end
   brd[square] = COMPUTER_MARKER
 end
 
@@ -63,41 +70,88 @@ def someone_won?(brd)
 end
 
 def detect_winner(brd)
-  WINNING_LINES.each do |line|
-    if brd.values_at(*line).count(PLAYER_MARKER) == 3
-      return 'Player'
-    elsif brd.values_at(*line).count(COMPUTER_MARKER) == 3
-      return 'Computer'
-    end
+  WINNING_LINES.any? do |line|
+    return "Player" if brd.values_at(*line).all? { |squares| squares == 'X' }
+    return "Computer" if brd.values_at(*line).all? { |squares| squares == 'O' }
   end
   nil
 end
 
-# def joinor(brd, divider=', ', last_divider='or')
-#   if empty_squares(brd).count > 1
-#     empty_squares_without_last = empty_squares(brd).slice(0, (empty_squares(brd).count) -1)
-#     last_empty_square = empty_squares(brd).slice(-1)
-#     "#{empty_squares_without_last.join(divider)} #{last_divider} #{last_empty_square}."
-#   else
-#     empty_squares(brd)
-#   end
-# end
 def joinor(arr, delimiter, word='or')
   arr[-1] = "#{word} #{arr.last}" if arr.size > 1
   arr.join(delimiter)
-#require 'pry';binding.pry
 end
+
+def immediate_threat?(brd)
+  WINNING_LINES.any? do |line|
+    brd.values_at(*line).count(PLAYER_MARKER) == 2 &&
+      brd.values_at(*line).count(INITIAL_MARKER) == 1
+  end
+end
+
+def locate_threat(brd)
+  line_with_threat = WINNING_LINES.select do |line|
+    brd.values_at(*line).count(PLAYER_MARKER) == 2 &&
+    brd.values_at(*line).count(INITIAL_MARKER) == 1
+  end
+  line_with_threat.flatten.each do |num|
+    return num if brd[num] == INITIAL_MARKER
+  end
+end
+
+def winning_opportunity?(brd)
+  WINNING_LINES.any? do |line|
+    brd.values_at(*line).count(COMPUTER_MARKER) == 2 &&
+      brd.values_at(*line).count(INITIAL_MARKER) == 1
+  end
+end
+
+def locate_winning_opportunity(brd)
+  line_with_threat = WINNING_LINES.select do |line|
+    brd.values_at(*line).count(COMPUTER_MARKER) == 2 &&
+    brd.values_at(*line).count(INITIAL_MARKER) == 1
+  end
+  line_with_threat.flatten.each do |num|
+    return num if brd[num] == INITIAL_MARKER
+  end
+end
+
+def place_piece!(brd, current_player)
+  player_places_piece!(brd) if current_player == "Player"
+  computer_places_piece!(brd) if current_player == "Computer"
+end
+
+def alternate_player(current_player)
+  return "Player" if current_player == "Computer"
+  return "Computer" if current_player == "Player"
+end
+
+player_score = 0
+computer_score = 0
+
+system 'clear'
+puts '*' * 80
+puts " Welcome to Tic Tac Toe Game! ".center(80, "*")
+puts " Select 1 for top left, 2 for top middle, 3 for top right,  ".center(80, "*")
+puts " 4 for middle left, 5 for middle middle, 6 for middle right,  ".center(80, "*")
+puts " 7 for bottom left, 8 for bottom middle, 9 for bottom right.  ".center(80, "*")
+puts '*' * 80
+
+prompt "Press 'ENTER' to begin..."
+gets
 
 loop do
   board = initialize_board
+  current_player = "Computer"
+  display_board(board)
+  prompt "Do you want to play first? Enter 'y' for yes:"
+  first = gets.chomp.downcase
+  current_player = "Player" if first == 'y'
 
   loop do
     display_board(board)
-
-    player_places_piece!(board)
-    break if someone_won?(board) || board_full?(board)
-
-    computer_places_piece!(board)
+    place_piece!(board, current_player)
+    current_player = alternate_player(current_player)
     break if someone_won?(board) || board_full?(board)
   end
 
@@ -109,9 +163,23 @@ loop do
     prompt "It's a tie!"
   end
 
-  prompt "Play again? (y or n)"
-  answer = gets.chomp
-  break unless answer.downcase.start_with?('y')
+  player_score += 1 if detect_winner(board) == 'Player'
+  computer_score += 1 if detect_winner(board) == 'Computer'
+
+  prompt "The scores are Player: #{player_score}; Computer #{computer_score}."
+
+  break if player_score >= 5 || computer_score >= 5
+  prompt "Press enter to start next round or 'exit' to exit:"
+  exit = gets.chomp.downcase
+  break if exit == 'exit'
 end
 
-prompt "Thanks for playing Tic Tac Toe! Good bye!"
+if player_score >= 5
+  prompt "Congratulations, you have won!"
+elsif computer_score >= 5
+  prompt "Sorry, you have lost!"
+end
+
+puts '*' * 80
+puts " Thanks for playing. Good bye! ".center(80, "*")
+puts '*' * 80
