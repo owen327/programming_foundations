@@ -61,5 +61,5 @@ p mess_with_demographics(munsters)
 p munsters
 # the munsters hash was mutated
 
-# 7)
-puts
+# 7) "paper"
+# 8) yes
