@@ -1,3 +1,4 @@
+
 WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
                 [[1, 4, 7], [2, 5, 8], [3, 6, 9]] +
                 [[1, 5, 9], [3, 5, 7]]
@@ -51,10 +52,10 @@ def player_places_piece!(brd)
 end
 
 def computer_places_piece!(brd)
-  square = if winning_opportunity?(brd)
-             locate_winning_opportunity(brd)
-           elsif immediate_threat?(brd)
-             locate_threat(brd)
+  square = if winning_opportunity?(brd, COMPUTER_MARKER)
+             locate_winning_opportunity(brd, COMPUTER_MARKER)
+           elsif winning_opportunity?(brd, PLAYER_MARKER)
+             locate_winning_opportunity(brd, PLAYER_MARKER)
            elsif brd[5] == INITIAL_MARKER
              5
            else
@@ -84,31 +85,16 @@ def joinor(arr, delimiter, word='or')
   arr.join(delimiter)
 end
 
-def immediate_threat?(brd)
+def winning_opportunity?(brd, marker)
   WINNING_LINES.any? do |line|
-    brd.values_at(*line).count(PLAYER_MARKER) == 2 &&
+    brd.values_at(*line).count(marker) == 2 &&
       brd.values_at(*line).count(INITIAL_MARKER) == 1
   end
 end
 
-def locate_threat(brd)
-  line_with_threat = WINNING_LINES.select do |line|
-    brd.values_at(*line).count(PLAYER_MARKER) == 2 &&
-    brd.values_at(*line).count(INITIAL_MARKER) == 1
-  end
-  line_with_threat.flatten.detect { |num| brd[num] == INITIAL_MARKER }
-end
-
-def winning_opportunity?(brd)
-  WINNING_LINES.any? do |line|
-    brd.values_at(*line).count(COMPUTER_MARKER) == 2 &&
-      brd.values_at(*line).count(INITIAL_MARKER) == 1
-  end
-end
-
-def locate_winning_opportunity(brd)
+def locate_winning_opportunity(brd, marker)
   line_with_win_opportunity = WINNING_LINES.select do |line|
-    brd.values_at(*line).count(COMPUTER_MARKER) == 2 &&
+    brd.values_at(*line).count(marker) == 2 &&
     brd.values_at(*line).count(INITIAL_MARKER) == 1
   end
   line_with_win_opportunity.flatten.detect { |num| brd[num] == INITIAL_MARKER }
