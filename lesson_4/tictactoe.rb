@@ -86,18 +86,14 @@ def joinor(arr, delimiter, word='or')
 end
 
 def winning_opportunity?(brd, marker)
-  WINNING_LINES.any? do |line|
+  WINNING_LINES.find do |line|
     brd.values_at(*line).count(marker) == 2 &&
       brd.values_at(*line).count(INITIAL_MARKER) == 1
   end
 end
 
 def locate_winning_opportunity(brd, marker)
-  line_with_win_opportunity = WINNING_LINES.find do |line|
-    brd.values_at(*line).count(marker) == 2 &&
-    brd.values_at(*line).count(INITIAL_MARKER) == 1
-  end
-  line_with_win_opportunity.find { |num| brd[num] == INITIAL_MARKER }
+  winning_opportunity?(brd, marker).find { |num| brd[num] == INITIAL_MARKER }
 end
 
 def place_piece!(brd, current_player)
