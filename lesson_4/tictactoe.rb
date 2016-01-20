@@ -107,11 +107,11 @@ def winning_opportunity?(brd)
 end
 
 def locate_winning_opportunity(brd)
-  line_with_threat = WINNING_LINES.select do |line|
+  line_with_winning_opportunity = WINNING_LINES.select do |line|
     brd.values_at(*line).count(COMPUTER_MARKER) == 2 &&
     brd.values_at(*line).count(INITIAL_MARKER) == 1
   end
-  line_with_threat.flatten.each do |num|
+  line_with_winning_opportunity.flatten.each do |num|
     return num if brd[num] == INITIAL_MARKER
   end
 end
