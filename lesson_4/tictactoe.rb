@@ -53,9 +53,9 @@ end
 
 def computer_places_piece!(brd)
   square = if winning_opportunity?(brd, COMPUTER_MARKER)
-             locate_winning_opportunity(brd, COMPUTER_MARKER)
+             locate_winning_square(brd, COMPUTER_MARKER)
            elsif winning_opportunity?(brd, PLAYER_MARKER)
-             locate_winning_opportunity(brd, PLAYER_MARKER)
+             locate_winning_square(brd, PLAYER_MARKER)
            elsif brd[5] == INITIAL_MARKER
              5
            else
@@ -92,7 +92,7 @@ def winning_opportunity?(brd, marker)
   end
 end
 
-def locate_winning_opportunity(brd, marker)
+def locate_winning_square(brd, marker)
   winning_opportunity?(brd, marker).find { |num| brd[num] == INITIAL_MARKER }
 end
 
