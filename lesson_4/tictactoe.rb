@@ -51,15 +51,15 @@ def player_places_piece!(brd)
 end
 
 def computer_places_piece!(brd)
-  if winning_opportunity?(brd)
-    square = locate_winning_opportunity(brd)
-  elsif immediate_threat?(brd)
-    square = locate_threat(brd)
-  elsif brd[5] == INITIAL_MARKER
-    square = 5
-  else
-    square = empty_squares(brd).sample
-  end
+  square = if winning_opportunity?(brd)
+             locate_winning_opportunity(brd)
+           elsif immediate_threat?(brd)
+             locate_threat(brd)
+           elsif brd[5] == INITIAL_MARKER
+             5
+           else
+             empty_squares(brd).sample
+           end
   brd[square] = COMPUTER_MARKER
 end
 
@@ -96,9 +96,7 @@ def locate_threat(brd)
     brd.values_at(*line).count(PLAYER_MARKER) == 2 &&
     brd.values_at(*line).count(INITIAL_MARKER) == 1
   end
-  line_with_threat.flatten.each do |num|
-    return num if brd[num] == INITIAL_MARKER
-  end
+  line_with_threat.flatten.detect { |num| brd[num] == INITIAL_MARKER }
 end
 
 def winning_opportunity?(brd)
@@ -109,13 +107,11 @@ def winning_opportunity?(brd)
 end
 
 def locate_winning_opportunity(brd)
-  line_with_winning_opportunity = WINNING_LINES.select do |line|
+  line_with_win_opportunity = WINNING_LINES.select do |line|
     brd.values_at(*line).count(COMPUTER_MARKER) == 2 &&
     brd.values_at(*line).count(INITIAL_MARKER) == 1
   end
-  line_with_winning_opportunity.flatten.each do |num|
-    return num if brd[num] == INITIAL_MARKER
-  end
+  line_with_win_opportunity.flatten.detect { |num| brd[num] == INITIAL_MARKER }
 end
 
 def place_piece!(brd, current_player)
@@ -170,9 +166,10 @@ loop do
   prompt "The scores are Player: #{player_score}; Computer #{computer_score}."
 
   break if player_score >= 5 || computer_score >= 5
+
   prompt "Press enter to start next round or 'exit' to exit:"
-  exit = gets.chomp.downcase
-  break if exit == 'exit'
+  continue = gets.chomp.downcase
+  break if continue == 'exit'
 end
 
 if player_score >= 5
