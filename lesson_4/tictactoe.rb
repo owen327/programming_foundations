@@ -77,7 +77,6 @@ def detect_winner(brd)
     return "Player" if brd.values_at(*line).all? { |squares| squares == 'X' }
     return "Computer" if brd.values_at(*line).all? { |squares| squares == 'O' }
   end
-  nil
 end
 
 def joinor(arr, delimiter, word='or')
