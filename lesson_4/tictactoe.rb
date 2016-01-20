@@ -11,20 +11,20 @@ end
 
 def display_board(brd)
   system 'clear'
-  puts "You're a #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}."
-  puts ""
-  puts "     |     |"
-  puts "  #{brd[1]}  |  #{brd[2]}  |  #{brd[3]}"
-  puts "     |     |"
-  puts "-----+-----+-----"
-  puts "     |     |"
-  puts "  #{brd[4]}  |  #{brd[5]}  |  #{brd[6]}"
-  puts "     |     |"
-  puts "-----+-----+-----"
-  puts "     |     |"
-  puts "  #{brd[7]}  |  #{brd[8]}  |  #{brd[9]}"
-  puts "     |     |"
-  puts ""
+  prompt "You're a #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}."
+  puts <<-DISPLAY_BOARD
+        |     |
+     #{brd[1]}  |  #{brd[2]}  |  #{brd[3]}
+        |     |
+   -----+-----+-----
+        |     |
+     #{brd[4]}  |  #{brd[5]}  |  #{brd[6]}
+        |     |
+   -----+-----+-----
+        |     |
+     #{brd[7]}  |  #{brd[8]}  |  #{brd[9]}
+        |     |
+  DISPLAY_BOARD
 end
 
 def initialize_board
