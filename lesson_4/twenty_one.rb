@@ -103,7 +103,7 @@ loop do
       break if answer == 'h' || answer == 's'
       prompt "Please enter only 'h' or 's'!"
     end
-    human_cards << deck.pop if answer != 's'
+    human_cards << deck.pop if answer == 'h'
     human_total = total(human_cards)
   end
 
