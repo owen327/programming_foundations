@@ -104,11 +104,11 @@ loop do
       prompt "Please enter only 'h' or 's'!"
     end
     human_cards << deck.pop if answer == 'h'
-    human_total = total(human_cards)
+    human_total = total(human_cards) if answer == 'h'
   end
 
   if answer == 's'
-      prompt "You chose to stay at #{human_total}"
+      prompt "You chose to stay at #{human_total}."
     loop do
       prompt "Press enter to continue"
       gets
@@ -119,13 +119,13 @@ loop do
       prompt "Dealer hits!"
     end
     display_cards(human_cards, dealer_cards, 'show')
-    prompt "Dealer stays!" unless busted?(dealer_cards) || total(dealer_cards) == TARGET
+    prompt "Dealer stays at #{dealer_total}!" unless busted?(dealer_cards) || total(dealer_cards) == TARGET
   end
 
   # Included for bonus excercise only
-  prompt "Dealer has #{dealer_cards}, for a total of: #{dealer_total}"
-  prompt "Player has #{human_cards}, for a total of: #{human_total}"
-  puts "=============="
+  # prompt "Dealer has #{dealer_cards}, for a total of: #{dealer_total}"
+  # prompt "Player has #{human_cards}, for a total of: #{human_total}"
+  # puts "=============="
 
   display_results(human_cards, dealer_cards, human_total, dealer_total)
 
