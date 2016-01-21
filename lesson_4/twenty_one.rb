@@ -97,7 +97,7 @@ loop do
   answer = nil
   loop do
     display_cards(human_cards, dealer_cards)
-    prompt "You chose to hit!" if answer == 'h'
+    prompt "You chose to hit and got #{human_cards[-1]}" if answer == 'h'
     break if answer == 's' || busted?(human_cards) || human_total == TARGET
     loop do
       prompt "Enter 'h' to hit 's' to stay?"
@@ -110,7 +110,9 @@ loop do
   end
 
   if answer == 's'
+    display_cards(human_cards, dealer_cards, 'show')
     prompt "You chose to stay at #{human_total}."
+    prompt "Dealer reveals card #{dealer_cards[-1]}"
     loop do
       prompt "Press enter to continue"
       gets
@@ -118,7 +120,7 @@ loop do
       dealer_cards << deck.pop
       dealer_total = total(dealer_cards)
       display_cards(human_cards, dealer_cards, 'show')
-      prompt "Dealer hits!"
+      prompt "Dealer hits and got #{dealer_cards[-1]}"
     end
     display_cards(human_cards, dealer_cards, 'show')
     prompt "Dealer stays at #{dealer_total}!" unless busted?(dealer_cards) || total(dealer_cards) == TARGET
