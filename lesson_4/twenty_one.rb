@@ -24,6 +24,7 @@ def display_cards(human_cards, dealer_cards, show='dont_show')
   prompt "Dealer has: #{dealer_cards[0..-2]} + ?" if show == 'dont_show'
   prompt "Dealer has: #{dealer_cards}" if show == 'show'
   prompt "Dealer total is #{total(dealer_cards)}" if show == 'show'
+  puts "=============="
   prompt "You have: #{human_cards}"
   prompt "Your total is #{total(human_cards)}"
   puts "=============="
