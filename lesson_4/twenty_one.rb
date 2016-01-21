@@ -1,6 +1,7 @@
 SUITS = ['H', 'D', 'S', 'C']
 VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 TARGET = 21
+STAYS_AT = 17
 
 def initialize_deck
   SUITS.product(VALUES)
@@ -108,11 +109,11 @@ loop do
   end
 
   if answer == 's'
-      prompt "You chose to stay at #{human_total}."
+    prompt "You chose to stay at #{human_total}."
     loop do
       prompt "Press enter to continue"
       gets
-      break if dealer_total >= 17 || dealer_total > human_total
+      break if dealer_total >= STAYS_AT || dealer_total > human_total
       dealer_cards << deck.pop
       dealer_total = total(dealer_cards)
       display_cards(human_cards, dealer_cards, 'show')
