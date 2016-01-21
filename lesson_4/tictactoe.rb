@@ -43,7 +43,7 @@ end
 def player_places_piece!(brd)
   square = ''
   loop do
-    prompt "Choose a position to place a piece: #{joinor(empty_squares(brd), ', ')}"
+    prompt "Choose a position to place a piece: #{joinor(empty_squares(brd))}"
     square = gets.chomp.to_i
     break if empty_squares(brd).include?(square)
     prompt "Sorry, that's not a valid choice."
@@ -52,9 +52,9 @@ def player_places_piece!(brd)
 end
 
 def computer_places_piece!(brd)
-  square = if winning_opportunity?(brd, COMPUTER_MARKER)
+  square = if possible_win?(brd, COMPUTER_MARKER)
              locate_winning_square(brd, COMPUTER_MARKER)
-           elsif winning_opportunity?(brd, PLAYER_MARKER)
+           elsif possible_win?(brd, PLAYER_MARKER)
              locate_winning_square(brd, PLAYER_MARKER)
            elsif brd[5] == INITIAL_MARKER
              5
@@ -62,6 +62,17 @@ def computer_places_piece!(brd)
              empty_squares(brd).sample
            end
   brd[square] = COMPUTER_MARKER
+end
+
+def possible_win?(brd, marker)
+  WINNING_LINES.find do |line|
+    brd.values_at(*line).count(marker) == 2 &&
+      brd.values_at(*line).count(INITIAL_MARKER) == 1
+  end
+end
+
+def locate_winning_square(brd, marker)
+  possible_win?(brd, marker).find { |square| brd[square] == INITIAL_MARKER }
 end
 
 def board_full?(brd)
@@ -79,20 +90,9 @@ def detect_winner(brd)
   end
 end
 
-def joinor(arr, delimiter, word='or')
-  arr[-1] = "#{word} #{arr.last}" if arr.size > 1
-  arr.join(delimiter)
-end
-
-def winning_opportunity?(brd, marker)
-  WINNING_LINES.find do |line|
-    brd.values_at(*line).count(marker) == 2 &&
-      brd.values_at(*line).count(INITIAL_MARKER) == 1
-  end
-end
-
-def locate_winning_square(brd, marker)
-  winning_opportunity?(brd, marker).find { |num| brd[num] == INITIAL_MARKER }
+def joinor(arr, delimiter=', ', word='or')
+  return arr.join if arr.size == 1
+  arr[0..-2].join(delimiter) << ", #{word} #{arr[-1]}."
 end
 
 def place_piece!(brd, current_player)
@@ -144,7 +144,7 @@ loop do
     prompt "It's a tie!"
   end
 
-  prompt "The scores are Player: #{player_score}; Computer #{computer_score}."
+  prompt "The scores are Player: #{player_score}; Computer: #{computer_score}."
 
   break if player_score >= 5 || computer_score >= 5
 
