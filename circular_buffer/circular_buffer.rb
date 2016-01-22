@@ -9,7 +9,7 @@ class CircularBuffer
   end
 
   def read
-    fail BufferEmptyException if @buffer.last.nil?
+    fail BufferEmptyException if @buffer.empty?
     @buffer.delete_at(0)
   end
 
