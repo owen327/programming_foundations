@@ -1,4 +1,3 @@
-# SUITS = ['H', 'D', 'S', 'C']
 SUITS = ["\u{2660}", "\u{2665}", "\u{2663}", "\u{2666}"]
 VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 TARGET = 21
@@ -19,7 +18,6 @@ def total(cards)
   total = values.map(&:to_i).reduce(:+)
   values.count('11').times { total -= 10 if total > TARGET }
   total
-  require 'pry';binding.pry
 end
 
 def display_cards(human_cards, dealer_cards, show='dont_show')
@@ -75,6 +73,15 @@ def display_results(human_cards, dealer_cards, human_total, dealer_total)
   end
 end
 
+def winner?(player, human_cards, dealer_cards, human_total, dealer_total)
+  case detect_results(human_cards, dealer_cards, human_total, dealer_total)
+  when :human_21, :dealer_buster, :human_win
+    return true if player == :human
+  when :dealer_21, :human_busted, :dealer_win
+    return true if player == :dealer
+  end
+end
+
 human_score = 0
 dealer_score = 0
 
@@ -117,29 +124,21 @@ loop do
     loop do
       prompt "Press enter to continue"
       gets
-      break if dealer_total >= STAYS_AT || dealer_total > human_total
+      break if dealer_total >= STAYS_AT
       dealer_cards << deck.pop
       dealer_total = total(dealer_cards)
       display_cards(human_cards, dealer_cards, 'show')
       prompt "Dealer hits and got #{dealer_cards[-1]}"
     end
     display_cards(human_cards, dealer_cards, 'show')
-    prompt "Dealer stays at #{dealer_total}!" unless busted?(dealer_cards) || total(dealer_cards) == TARGET
+    prompt "Dealer stays at #{dealer_total}!" unless busted?(dealer_cards) ||
+                                              total(dealer_cards) == TARGET
   end
-
-  # Included for bonus excercise only
-  # prompt "Dealer has #{dealer_cards}, for a total of: #{dealer_total}"
-  # prompt "Player has #{human_cards}, for a total of: #{human_total}"
-  # puts "=============="
 
   display_results(human_cards, dealer_cards, human_total, dealer_total)
 
-  case detect_results(human_cards, dealer_cards, human_total, dealer_total)
-  when :human_21, :dealer_buster, :human_win
-    human_score += 1
-  when :dealer_21, :human_busted, :dealer_win
-    dealer_score += 1
-  end
+  human_score += 1 if winner?(:human, human_cards, dealer_cards, human_total, dealer_total)
+  dealer_score += 1 if winner?(:dealer, human_cards, dealer_cards, human_total, dealer_total)
 
   prompt "The scores are Player: #{human_score}; Dealer: #{dealer_score}."
 
