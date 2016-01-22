@@ -13,10 +13,10 @@ end
 
 def total(cards)
   values = cards.map do |card|
-    card[1].gsub(/[AKQJ]/, 'A' => 11, 'K' => 10, 'Q' => 10, 'J' => 10)
+    card[1].gsub(/[AKQJ]/, 'A' => 11, 'K' => 10, 'Q' => 10, 'J' => 10).to_i
   end
-  total = values.map(&:to_i).reduce(:+)
-  values.count('11').times { total -= 10 if total > TARGET }
+  total = values.reduce(:+)
+  values.count(11).times { total -= 10 if total > TARGET }
   total
 end
 
@@ -82,6 +82,15 @@ def winner?(player, human_cards, dealer_cards, human_total, dealer_total)
   end
 end
 
+def hit_or_stay
+  loop do
+    prompt "Enter 'h' to hit 's' to stay?"
+    answer = gets.chomp.downcase
+    return answer if answer == 'h' || answer == 's'
+    prompt "Please enter only 'h' or 's'!"
+  end
+end
+
 human_score = 0
 dealer_score = 0
 
@@ -103,16 +112,12 @@ loop do
   dealer_total = total(dealer_cards)
 
   answer = nil
+
   loop do
     display_cards(human_cards, dealer_cards)
     prompt "You chose to hit and got #{human_cards[-1]}" if answer == 'h'
     break if answer == 's' || busted?(human_cards) || human_total == TARGET
-    loop do
-      prompt "Enter 'h' to hit 's' to stay?"
-      answer = gets.chomp.downcase
-      break if answer == 'h' || answer == 's'
-      prompt "Please enter only 'h' or 's'!"
-    end
+    answer = hit_or_stay
     human_cards << deck.pop if answer == 'h'
     human_total = total(human_cards) if answer == 'h'
   end
@@ -137,8 +142,10 @@ loop do
 
   display_results(human_cards, dealer_cards, human_total, dealer_total)
 
-  human_score += 1 if winner?(:human, human_cards, dealer_cards, human_total, dealer_total)
-  dealer_score += 1 if winner?(:dealer, human_cards, dealer_cards, human_total, dealer_total)
+  human_score += 1 if winner?(:human, human_cards, dealer_cards,
+                              human_total, dealer_total)
+  dealer_score += 1 if winner?(:dealer, human_cards, dealer_cards,
+                              human_total, dealer_total)
 
   prompt "The scores are Player: #{human_score}; Dealer: #{dealer_score}."
 
