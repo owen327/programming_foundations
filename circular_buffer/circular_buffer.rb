@@ -1,7 +1,3 @@
-class BufferEmptyException < StandardError; end
-
-class BufferFullException < StandardError; end
-
 class CircularBuffer
   def initialize(size)
     @buffer = []
@@ -19,7 +15,7 @@ class CircularBuffer
   end
 
   def clear
-    @buffer = []
+    @buffer.clear
   end
 
   def write!(element)
@@ -31,4 +27,7 @@ class CircularBuffer
       write(element)
     end
   end
+
+  class BufferEmptyException < StandardError; end
+  class BufferFullException < StandardError; end
 end
