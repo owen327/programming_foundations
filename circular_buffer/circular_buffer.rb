@@ -1,12 +1,14 @@
 class CircularBuffer
+  class BufferEmptyException < StandardError; end
+  class BufferFullException < StandardError; end
+
   def initialize(size)
     @buffer = []
     @max = size
   end
 
   def read
-    fail BufferEmptyException if @buffer.empty?
-    @buffer.delete_at(0)
+    @buffer.delete(@buffer[0]) { fail BufferEmptyException }
   end
 
   def write(element)
@@ -27,7 +29,4 @@ class CircularBuffer
       write(element)
     end
   end
-
-  class BufferEmptyException < StandardError; end
-  class BufferFullException < StandardError; end
 end
