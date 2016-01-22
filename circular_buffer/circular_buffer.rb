@@ -22,11 +22,7 @@ class CircularBuffer
 
   def write!(element)
     return if element.nil?
-    if @buffer.size == @max
-      read
-      write(element)
-    else
-      write(element)
-    end
+    read if @buffer.size == @max
+    write(element)
   end
 end
