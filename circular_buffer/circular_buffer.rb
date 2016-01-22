@@ -13,22 +13,22 @@ class CircularBuffer
     @buffer.delete_at(0)
   end
 
-  def write(num)
+  def write(element)
     fail BufferFullException if @buffer.size == @max
-    @buffer << num if num != nil
+    @buffer << element if element != nil
   end
 
   def clear
     @buffer = []
   end
 
-  def write!(num)
-    return if num == nil
+  def write!(element)
+    return if element == nil
     if @buffer.size == @max
       self.read
-      self.write(num)
+      self.write(element)
     else
-      self.write(num)
+      self.write(element)
     end
   end
 end
