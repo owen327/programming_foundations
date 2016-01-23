@@ -12,8 +12,9 @@ class CircularBuffer
   end
 
   def write(element)
+    return if element.nil?
     fail BufferFullException if @buffer.size == @max
-    @buffer << element unless element.nil?
+    @buffer << element
   end
 
   def clear

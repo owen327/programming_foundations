@@ -79,6 +79,8 @@ def winner?(player, human_cards, dealer_cards, human_total, dealer_total)
     return true if player == :human
   when :dealer_21, :human_busted, :dealer_win
     return true if player == :dealer
+  else
+    false
   end
 end
 
