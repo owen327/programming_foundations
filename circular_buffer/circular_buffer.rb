@@ -8,7 +8,8 @@ class CircularBuffer
   end
 
   def read
-    @buffer.delete(@buffer[0]) { fail BufferEmptyException }
+    fail BufferEmptyException if @buffer.empty?
+    @buffer.shift
   end
 
   def write(element)
