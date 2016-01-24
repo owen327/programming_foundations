@@ -13,7 +13,7 @@ class CircularBuffer
     fail BufferEmptyException if @buffer.all?(&:nil?)
     show = @buffer[@end_index]
     @buffer[@end_index] = nil
-    @end_index = increment!(@end_index)
+    @end_index = increment(@end_index)
     show
   end
 
@@ -21,7 +21,7 @@ class CircularBuffer
     return if element.nil?
     fail BufferFullException if @buffer.all?
     @buffer[@start_index] = element
-    @start_index = increment!(@start_index)
+    @start_index = increment(@start_index)
   end
 
   def clear
@@ -36,7 +36,7 @@ class CircularBuffer
 
   private
 
-  def increment!(index)
+  def increment(index)
     return 0 if index == @size - 1
     index + 1
   end
