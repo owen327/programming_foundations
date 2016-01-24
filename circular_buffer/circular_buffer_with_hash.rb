@@ -2,6 +2,8 @@ class CircularBuffer
   class BufferEmptyException < StandardError; end
   class BufferFullException < StandardError; end
 
+  RESET_AT = 100
+
   def initialize(size)
     @max = size
     @buffer = {}
@@ -17,7 +19,7 @@ class CircularBuffer
     fail BufferFullException if @buffer.size == @max
     @buffer[@counter] = element
     @counter += 1
-    reset_counter if @counter == @max
+    reset_counter if @counter == RESET_AT
   end
 
   def write!(element)
