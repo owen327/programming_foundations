@@ -8,15 +8,15 @@ class CircularBuffer
     @counter = 0
   end
 
-  def write(element)
-    return if element.nil?
-    raise BufferFullException if @buffer.size == @max
-    @buffer[@counter] = element
-    @counter += 1
+  def read
+    @buffer.delete(@buffer.keys.min) { fail BufferEmptyException }
   end
 
-  def read
-    @buffer.delete(@buffer.keys.min) { raise BufferEmptyException }
+  def write(element)
+    return if element.nil?
+    fail BufferFullException if @buffer.size == @max
+    @buffer[@counter] = element
+    @counter += 1
   end
 
   def write!(element)
