@@ -10,18 +10,18 @@ class CircularBuffer
   end
 
   def read
-    fail BufferEmptyException if buffer_empty?
+    fail BufferEmptyException if @buffer.all?(&:nil?)
     show = @buffer[@end_index]
     @buffer[@end_index] = nil
-    @end_index = increment(@end_index)
+    @end_index = increment!(@end_index)
     show
   end
 
   def write(element)
     return if element.nil?
-    fail BufferFullException if buffer_full?
+    fail BufferFullException if @buffer.all?
     @buffer[@start_index] = element
-    @start_index = increment(@start_index)
+    @start_index = increment!(@start_index)
   end
 
   def clear
@@ -30,21 +30,13 @@ class CircularBuffer
 
   def write!(element)
     return if element.nil?
-    read if buffer_full?
+    read if @buffer.all?
     write(element)
   end
 
   private
 
-  def buffer_full?
-    @buffer.all? { |elements| elements }
-  end
-
-  def buffer_empty?
-    @buffer.all?(&:nil?)
-  end
-
-  def increment(index)
+  def increment!(index)
     return 0 if index == @size - 1
     index + 1
   end
