@@ -37,7 +37,7 @@ class CircularBuffer
   private
 
   def increment(index)
-    return 0 if index == @size - 1
-    index + 1
+    index += 1
+    index %= @size
   end
 end

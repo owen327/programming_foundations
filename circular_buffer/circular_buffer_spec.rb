@@ -69,6 +69,7 @@ class CircularBufferTest < Minitest::Test
   end
 
   def test_overwriting_oldest_item_in_a_full_buffer
+
     buffer = CircularBuffer.new(2)
     buffer.write '1'
     buffer.write '2'

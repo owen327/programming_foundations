@@ -9,7 +9,14 @@ class CircularBuffer
   end
 
   def read
-    @buffer.delete(@counter - @buffer.size) { fail BufferEmptyException }
+    oldest_key = (@counter + @max - @buffer.size) % @max
+    @buffer.delete(oldest_key) { fail BufferEmptyException }
+  end
+
+  def write!(element)
+    return if element.nil?
+    read if @buffer.size == @max
+    write(element)
   end
 
   def write(element)
@@ -17,13 +24,7 @@ class CircularBuffer
     fail BufferFullException if @buffer.size == @max
     @buffer[@counter] = element
     @counter += 1
-    @counter == 0 if @counter == @max
-  end
-
-  def write!(element)
-    return if element.nil?
-    read if @buffer.size == @max
-    write(element)
+    @counter %= @max
   end
 
   def clear
