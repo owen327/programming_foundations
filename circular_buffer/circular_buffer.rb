@@ -18,10 +18,7 @@ class CircularBuffer
   end
 
   def write(element)
-    return if element.nil?
-    fail BufferFullException if @buffer.all?
-    @buffer[@start_index] = element
-    @start_index = increment(@start_index)
+    record(element) { fail BufferFullException }
   end
 
   def clear
@@ -29,15 +26,19 @@ class CircularBuffer
   end
 
   def write!(element)
-    return if element.nil?
-    read if @buffer.all?
-    write(element)
+    record(element) { read }
   end
 
   private
 
   def increment(index)
-    index += 1
-    index %= @size
+    index = (index + 1) % @size
+  end
+
+  def record(element, &block)
+    return if element.nil?
+    block.call if @buffer.all?
+    @buffer[@start_index] = element
+    @start_index = increment(@start_index)
   end
 end
