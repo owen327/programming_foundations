@@ -31,7 +31,6 @@ class CircularBuffer
     return if element.nil?
     block.call if @buffer.size == @max
     @buffer[@counter] = element
-    @counter += 1
-    @counter %= @max
+    @counter = (@counter + 1) % @max
   end
 end
