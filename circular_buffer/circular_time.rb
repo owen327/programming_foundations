@@ -5,12 +5,10 @@ class CircularBuffer
   def initialize(size)
     @max = size
     @buffer = {}
-
   end
 
   def read
-    oldest_key = @buffer.keys.min
-    @buffer.delete(oldest_key) { fail BufferEmptyException }
+    @buffer.delete(@buffer.keys.min) { fail BufferEmptyException }
   end
 
   def write!(element)
