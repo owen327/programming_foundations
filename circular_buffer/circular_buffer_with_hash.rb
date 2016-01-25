@@ -25,6 +25,8 @@ class CircularBuffer
     initialize(@max)
   end
 
+  private
+
   def record(element, &block)
     return if element.nil?
     block.call if @buffer.size == @max
