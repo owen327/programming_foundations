@@ -14,20 +14,22 @@ class CircularBuffer
   end
 
   def write!(element)
-    return if element.nil?
-    read if @buffer.size == @max
-    write(element)
+    record(element) { read }
   end
 
   def write(element)
-    return if element.nil?
-    fail BufferFullException if @buffer.size == @max
-    @buffer[@counter] = element
-    @counter += 1
-    @counter %= @max
+    record(element) { fail BufferFullException }
   end
 
   def clear
     initialize(@max)
+  end
+
+  def record(element, &block)
+    return if element.nil?
+    block.call if @buffer.size == @max
+    @buffer[@counter] = element
+    @counter += 1
+    @counter %= @max
   end
 end
