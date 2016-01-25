@@ -9,7 +9,7 @@ class CircularBuffer
   end
 
   def read
-    oldest_key = (@counter + @max - @buffer.size) % @max
+    oldest_key = (@counter - @buffer.size) % @max
     @buffer.delete(oldest_key) { fail BufferEmptyException }
   end
 
