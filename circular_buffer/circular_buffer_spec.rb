@@ -1,6 +1,7 @@
 require 'minitest/autorun'
-require_relative 'circular_buffer'
+#require_relative 'circular_buffer'
 #require_relative 'circular_buffer_with_hash'
+require_relative 'circular_time'
 
 class CircularBufferTest < Minitest::Test
   def test_read_empty_buffer_throws_buffer_empty_exception
@@ -69,7 +70,6 @@ class CircularBufferTest < Minitest::Test
   end
 
   def test_overwriting_oldest_item_in_a_full_buffer
-
     buffer = CircularBuffer.new(2)
     buffer.write '1'
     buffer.write '2'
