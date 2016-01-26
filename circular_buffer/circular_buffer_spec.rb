@@ -1,7 +1,7 @@
 require 'minitest/autorun'
-#require_relative 'circular_buffer'
+require_relative 'circular_buffer'
 #require_relative 'circular_buffer_with_hash'
-require_relative 'circular_time'
+#require_relative 'circular_time'
 
 class CircularBufferTest < Minitest::Test
   def test_read_empty_buffer_throws_buffer_empty_exception

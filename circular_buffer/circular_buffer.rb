@@ -32,12 +32,12 @@ class CircularBuffer
   private
 
   def increment(index)
-    index = (index + 1) % @size
+    (index + 1) % @size
   end
 
   def record(element, &block)
     return if element.nil?
-    block.call if @buffer.all?
+    block.call if @buffer.none?(&:nil?)
     @buffer[@start_index] = element
     @start_index = increment(@start_index)
   end
